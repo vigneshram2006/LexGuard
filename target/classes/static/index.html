@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>⚖️ LexGuard - Legal Scenario Analyzer</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        textarea {
+            width: 100%;
+            height: 100px;
+            margin-top: 10px;
+            margin-bottom: 20px;
+            padding: 10px;
+            font-size: 14px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #ecf0f1;
+        }
+        .error {
+            color: red;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<h1>⚖️ LexGuard - Legal Scenario Analyzer</h1>
+
+<textarea id="scenarioInput" placeholder="Type your legal scenario here..."></textarea><br>
+<button onclick="analyzeScenario()">Analyze</button>
+
+<div id="response" class="result"></div>
+
+<script>
+    async function analyzeScenario() {
+        const input = document.getElementById("scenarioInput").value;
+        const responseDiv = document.getElementById("response");
+
+        try {
+            const res = await fetch("http://localhost:8081/api/analyze", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ scenario: input })
+            });
+
+            if (!res.ok) {
+                throw new Error("Backend returned " + res.status);
+            }
+
+            const data = await res.json();
+
+            responseDiv.innerHTML = `
+                <h3>Priority: ${data.priority}</h3>
+                <p><strong>Rights:</strong> ${data.rights.join(", ")}</p>
+                <p><strong>Hotspots:</strong> ${data.hotspots.join(", ")}</p>
+                <p><strong>Suggested Actions:</strong> ${data.suggestedActions.join(", ")}</p>
+            `;
+        } catch (err) {
+            responseDiv.innerHTML = `<p class="error">Error: ${err.message}</p>`;
+        }
+    }
+</script>
+</body>
+</html>

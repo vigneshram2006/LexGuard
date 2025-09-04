@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LexGuard Prototype</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        #response { margin-top: 20px; padding: 15px; border: 1px solid #ccc; border-radius: 5px; }
+    </style>
+</head>
+<body>
+<h1>LexGuard Prototype</h1>
+<input type="text" id="userInput" placeholder="Enter your situation...">
+<button onclick="analyze()">Analyze</button>
+<div id="response"></div>
+
+<script>
+    async function analyze() {
+      const text = document.getElementById("userInput").value;
+      const responseDiv = document.getElementById("response");
+
+      try {
+        const res = await fetch(`http://localhost:8080/api/analyze?text=${encodeURIComponent(text)}`);
+        if (!res.ok) throw new Error("Server error");
+
+        const data = await res.json();
+
+        // Format nicely for judges
+        responseDiv.innerHTML = `
+          <h3>Priority: ${data.priority}</h3>
+          <p><strong>Rights:</strong> ${data.rights}</p>
+          <p><strong>Hotspots:</strong> ${data.hotspots.join(", ")}</p>
+          <p><strong>Suggested Actions:</strong> ${data.suggestedActions.join(", ")}</p>
+        `;
+      } catch (err) {
+        responseDiv.innerHTML = `<span style="color:red">Error: ${err.message}</span>`;
+      }
+    }
+</script>
+</body>
+</html>

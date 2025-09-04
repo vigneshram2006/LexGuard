@@ -1,0 +1,9 @@
+com\lexguard\config\CorsConfig$1.class
+com\lexguard\controller\AnalysisController.class
+com\lexguard\model\AnalysisRequest.class
+com\lexguard\config\CorsConfig.class
+com\lexguard\model\AnalysisResponse.class
+com\lexguard\model\Scenario.class
+com\lexguard\model\AnalysisResponse$Builder.class
+com\lexguard\LexGuardApplication.class
+com\lexguard\model\Finding.class
